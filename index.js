@@ -7,7 +7,7 @@ var reportTemplate = require('fs').readFileSync(__dirname + '/reportTemplate.mus
 module.exports = function(config){
 
   var options = {
-    config:{
+    config: {
       host:config.host,
       username:config.username,
       password:config.password,
@@ -18,7 +18,6 @@ module.exports = function(config){
 
   return function(results, opts, done) {
     console.log('Jira-Reporter is go...');
-
 
       Object.keys(results.modules).map(function(key){
         results.modules[key].module = key;
@@ -37,6 +36,7 @@ module.exports = function(config){
       }).reduce(function(a, b){
 
         var ret = {
+          module:b.module,
           summary: Mustache.render(config.summaryTemplate || summaryTemplate, b),
           description: Mustache.render(config.reportTemplate || reportTemplate, b),
           labels: b.module.split(/\\|\//g).concat(config.labels || []),
@@ -46,8 +46,15 @@ module.exports = function(config){
 
         return a.concat(ret);
       }, []).forEach(function(issue){
+        var fileDir = config.projectRoot + config.imgPath + issue.module.split(/\\|\//g).join('\\');
+        var filePath = fileDir + '\\' + require('fs').readdirSync(fileDir).
+        sort(function(a, b){
+          return a > b;
+        })[0];
+        delete issue.module;
         options.data = {
-          fields:issue
+          fields:issue,
+          file:filePath
         };
         jira.issue.post(options, function(err, response) {
           if (err.errors && err.errors.length)
