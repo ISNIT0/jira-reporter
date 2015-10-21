@@ -1,0 +1,8 @@
+{
+  "jira":{
+    "username":"myuser",
+    "password":"mypass",
+    "host":"myhost.atlassian.net",
+    "port":"80"
+  }
+}
