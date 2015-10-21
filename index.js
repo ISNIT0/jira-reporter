@@ -35,7 +35,6 @@ module.exports = function(config){
         });
         return item;
       }).reduce(function(a, b){
-        b.branch = branch;
 
         var ret = {
           summary: Mustache.render(config.summaryTemplate || summaryTemplate, b),

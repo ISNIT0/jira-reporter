@@ -1,14 +1,14 @@
 {
   "name": "jira-reporter",
   "repository": {
-    "type" : "git",
-    "url" : "https://github.com/ISNTI0/jira-reporter.git"
+    "type": "git",
+    "url": "https://github.com/ISNTI0/jira-reporter.git"
   },
-  "main":"index.js",
-  "license" : "Unlicense",
-  "version": "0.1.0",
+  "main": "index.js",
+  "license": "Unlicense",
+  "version": "0.1.1",
   "dependencies": {
-    "jira-api":"0.2.2",
-    "mustache":"2.2.0"
+    "jira-api": "0.2.2",
+    "mustache": "2.2.0"
   }
 }
