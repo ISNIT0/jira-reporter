@@ -83,12 +83,12 @@ module.exports = function(config){
           console.error(err);
         });
 
-        var rdp = Mustache.render('full address:s:{{host}}\nusername:s:{{defaultUser}}\nprompt for credentials on client:i:1', {
+        var rdp = Mustache.render('full address:s:{{host}}`nusername:s:{{defaultUser}}`nprompt for credentials on client:i:1', {
           host:require('os').hostname(),
           defaultUser:'squpinternal\administrator'
         });
 
-        var runRemoteTests = Mustache.render('psexec -s -d -i 2 \\{{host}} -w "C:\Tests" cmd /k "npm test -- --test tests\{{module}}"', {
+        var runRemoteTests = Mustache.render('psexec -s -d -i 2 \\\\{{host}} -w "C:\\Tests" cmd /k "notepad.exe tests\\{{module}}.js | npm test -- --test tests\\{{module}}"', {
           module:issueModule,
           host:require('os').hostname()
         });
@@ -106,8 +106,8 @@ module.exports = function(config){
             file: {
               value: 'echo \"' + rdp + '\" > tmp.rdp ; mstsc tmp.rdp ; ' + runRemoteTests,
               options: {
-              filename: require('os').hostname()+'.bat',
-              contentType: 'bat/bat'
+              filename: require('os').hostname()+'.ps1',
+              contentType: 'powershell/powershell'
             }
           }
         }
