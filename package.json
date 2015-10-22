@@ -6,7 +6,7 @@
   },
   "main": "index.js",
   "license": "Unlicense",
-  "version": "0.1.12",
+  "version": "0.1.13",
   "dependencies": {
     "jira-api": "*",
     "mustache": "2.2.0"

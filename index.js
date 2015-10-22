@@ -25,14 +25,15 @@ module.exports = function(config){
       results.modules[key].module = key;
       return results.modules[key];
     }).filter(function(item){
-      return item.failures > 0 || item.errors > 0;
+      return item.failures > 0;
     }).map(function(item){
       item.failed = Object.keys(item.completed).reduce(function(a, b){
         var ret = item.completed[b];
         ret.name = b;
         return a.concat(ret);
       }, []).filter(function(item){
-        return item.failed || item.errors;
+        console.log(item)
+        return item.failed;
       });
       return item;
     }).reduce(function(a, b){
