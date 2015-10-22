@@ -16,7 +16,8 @@ module.exports = function(config){
       port:config.port
     }
   };
-
+  if(!config)
+    return Object;
 
   return function(results, opts, done) {
     console.log('Jira-Reporter is go...');
@@ -54,6 +55,7 @@ module.exports = function(config){
     sort(function(a, b){
       return a > b;
     })[0];
+    var issueModule = issue.module;
     delete issue.module;
     options.data = {
       fields:issue
@@ -64,7 +66,8 @@ module.exports = function(config){
           return console.error(response.errors);
 
         var url = Mustache.render('https://{{host}}/rest/api/2/issue/'+response.key+'/attachments', config);
-        request.post({
+
+        request.post({ //Screenshot
           url:url,
           headers: {
             'X-Atlassian-Token':'nocheck'
@@ -77,6 +80,38 @@ module.exports = function(config){
             file: fs.createReadStream(filePath)
           }
         }, function(err, res){
+          console.error(err);
+        });
+
+        var rdp = Mustache.render('full address:s:{{host}}\nusername:s:{{defaultUser}}\nprompt for credentials on client:i:1', {
+          host:require('os').hostname(),
+          defaultUser:'squpinternal\administrator'
+        });
+
+        var runRemoteTests = Mustache.render('psexec -s -d -i 2 \\{{host}} -w "C:\Tests" cmd /k "npm test -- --test tests\{{module}}"', {
+          module:issueModule,
+          host:require('os').hostname()
+        });
+
+        request.post({ //RDP Connection
+          url:url,
+          headers: {
+            'X-Atlassian-Token':'nocheck'
+          },
+          auth:{
+            user:config.username,
+            pass:config.password
+          },
+          formData: {
+            file: {
+              value: 'echo \"' + rdp + '\" > tmp.rdp ; mstsc tmp.rdp ; ' + runRemoteTests,
+              options: {
+              filename: require('os').hostname()+'.bat',
+              contentType: 'bat/bat'
+            }
+          }
+        }
+                     }, function(err, res){
           console.error(err);
         });
 
